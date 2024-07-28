@@ -113,25 +113,36 @@ for odor in odor_order:
 
 xtick_labels = [f'{odor}\nn={odor_n[odor]}' for odor in list(odor_n.keys())]
 
-# Plot
-g = sns.catplot(
+# Plot barplot
+# https://stackoverflow.com/questions/69315871/how-to-overlay-data-points-on-a-barplot-with-a-categorical-axis
+ax = sns.barplot(
     data=trap_df_bar,
-    kind='bar',
     x='Odor',
     y='Trap %',
     hue='Trap',
-    # palette="dark",
-    alpha=.6,
-    height=6,
-    aspect=1.6)
-g.set_xticklabels(xtick_labels, size=12)#, rotation=15)
-g.set_ylabels('% Flies trapped', size=16)
-g.set_yticklabels(size=15)
-g.set(ylim=(0, 100))
-g._legend.remove()
-g.despine(left=True)
-plt.legend(loc='upper right')
+    capsize=0.1,
+    errwidth=1.5,
+    alpha=0.4)
 
+sns.stripplot(
+    data=trap_df_bar,
+    x='Odor',
+    y='Trap %',
+    hue='Trap',
+    dodge=True,
+    alpha=0.9,
+    ax=ax
+)
+
+ax.set_xticklabels(xtick_labels, size=12, rotation=15)
+ax.set_ylabel('% Flies trapped', size=16)
+ax.set_xlabel('')
+ax.set_yticklabels(ax.get_yticklabels(), size=15)
+ax.set_ylim(0, 100)
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles[0:2], labels[0:2])
 plt.tight_layout()
 fig = plt.gcf()
+fig.set_size_inches(10, 6)
+
 fig.savefig(f'{savedir}/funneltrap_bar.PNG', format='png')
