@@ -21,8 +21,18 @@ odor_order = [
     'Banana filtrate',
     'Banana filtrate @ -1, water',
     '2-butanone @ -2, water',
+    '2-butanone @ -2, pfo',
     'Isoamyl Acetate @ -3, water'
 ]
+
+# Abbreviated labels for odors
+odor_abb = {
+    'Banana filtrate': 'Ban @ 0',
+    'Banana filtrate @ -1, water': 'Ban @ -1, water',
+    '2-butanone @ -2, water': '2-but @ -2, water',
+    '2-butanone @ -2, pfo': '2-but @ -2, pfo',
+    'Isoamyl Acetate @ -3, water': 'IaA @ -3, water'
+}
 
 
 def convert_google_sheet_url(url):
@@ -111,7 +121,8 @@ odor_n = {}
 for odor in odor_order:
     odor_n[odor] = trap_df_bar_n['Odor'].loc[trap_df_bar_n['Odor'] == odor].count()
 
-xtick_labels = [f'{odor}\nn={odor_n[odor]}' for odor in list(odor_n.keys())]
+# Abbreviated odor labels
+xtick_labels = [f'{odor_abb[odor]}\nn={odor_n[odor]}' for odor in list(odor_n.keys())]
 
 # Plot barplot
 # https://stackoverflow.com/questions/69315871/how-to-overlay-data-points-on-a-barplot-with-a-categorical-axis
