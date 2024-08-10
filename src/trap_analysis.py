@@ -154,6 +154,6 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[0:2], labels[0:2])
 plt.tight_layout()
 fig = plt.gcf()
-fig.set_size_inches(10, 6)
+fig.set_size_inches(10, 4)
 
 fig.savefig(f'{savedir}/funneltrap_bar.PNG', format='png')
