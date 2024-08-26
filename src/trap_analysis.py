@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import scipy.stats as st
 
 # Set matplotlib backend so figures don't pop up
 mpl.use('agg')
@@ -20,6 +21,8 @@ savedir = 'figures'
 odor_order = [
     'Banana filtrate',
     'Banana filtrate @ -1, water',
+    'Basil filtrate',
+    'Basil filtrate @ -1, water',
     '2-butanone @ -2, water',
     '2-butanone @ -2, pfo',
     'Isoamyl Acetate @ -3, water'
@@ -29,11 +32,15 @@ odor_order = [
 odor_abb = {
     'Banana filtrate': 'Ban @ 0',
     'Banana filtrate @ -1, water': 'Ban @ -1, water',
+    'Basil filtrate': 'Basil @ 0',
+    'Basil filtrate @ -1, water': 'Basil @ -1',
     '2-butanone @ -2, water': '2-but @ -2, water',
     '2-butanone @ -2, pfo': '2-but @ -2, pfo',
     'Isoamyl Acetate @ -3, water': 'IaA @ -3, water'
 }
 
+# P-value significance threshold
+p_sig = 0.05
 
 def convert_google_sheet_url(url):
     # Regular expression to match and capture the necessary part of the URL
@@ -146,7 +153,7 @@ sns.stripplot(
 )
 
 ax.set_xticklabels(xtick_labels, size=12, rotation=15)
-ax.set_ylabel('% Flies trapped', size=16)
+ax.set_ylabel('% Flies trapped\n(Mean + 95% CI)', size=16)
 ax.set_xlabel('')
 ax.set_yticklabels(ax.get_yticklabels(), size=15)
 ax.set_ylim(0, 100)
@@ -155,5 +162,40 @@ ax.legend(handles[0:2], labels[0:2])
 plt.tight_layout()
 fig = plt.gcf()
 fig.set_size_inches(10, 4)
+
+
+# Statistical tests
+# Kruskal-Wallis for each group against the solvent control
+trap_ks = {}
+trap_df_stats = trap_df_bar[['Odor', 'Trap', 'Trap %']].set_index('Odor')
+
+for odor, odf in trap_df_stats.groupby('Odor'):
+    odor_group = odf.loc[odf['Trap']=='odor', 'Trap %']
+    solvent_group = odf.loc[odf['Trap']=='solvent', 'Trap %']
+    trap_ks[odor] = st.kruskal(odor_group, solvent_group)
+
+# Mark significance and p-value for each odor-solvent pair
+#https://stackoverflow.com/questions/57203871/put-significance-asterisks-in-the-horizontal-middle-of-each-bar-in-a-barplot
+for patch, odor in zip(ax.patches, odor_order):
+    p_val = round(trap_ks[odor][1], 3)
+    p_text = f'p={p_val}'
+    color = 'black'
+
+    if p_val < p_sig:
+        p_text = '*\n' + p_text
+        color = 'magenta'
+
+    text_x = patch.get_x() + patch.get_width()
+    text_y = patch.get_height()*1.1
+    if text_y < 50:
+        text_y = 50
+
+    ax.text(text_x,
+            text_y,
+            p_text,
+            fontsize=8,
+            fontweight='bold',
+            color=color)
+
 
 fig.savefig(f'{savedir}/funneltrap_bar.PNG', format='png')
