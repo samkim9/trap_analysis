@@ -19,28 +19,40 @@ savedir = 'figures'
 
 # Odor order
 odor_order = [
+    '2-butanone @ -2, water',
+    #'2-butanone @ -2, pfo',
+    #'Isoamyl Acetate @ -3, water',
     'Banana filtrate',
     'Banana filtrate @ -1, water',
+    'Pear filtrate',
+    'Pear filtrate @ -1, water',
+    'PearB filtrate',
+    'PearB filtrate @ -1, water',
     'Basil filtrate',
-    'Basil filtrate @ -1, water',
-    '2-butanone @ -2, water',
-    '2-butanone @ -2, pfo',
-    'Isoamyl Acetate @ -3, water'
+    'Basil filtrate @ -1, water'
 ]
 
 # Abbreviated labels for odors
 odor_abb = {
-    'Banana filtrate': 'Ban @ 0',
-    'Banana filtrate @ -1, water': 'Ban @ -1, water',
-    'Basil filtrate': 'Basil @ 0',
-    'Basil filtrate @ -1, water': 'Basil @ -1',
     '2-butanone @ -2, water': '2-but @ -2, water',
     '2-butanone @ -2, pfo': '2-but @ -2, pfo',
-    'Isoamyl Acetate @ -3, water': 'IaA @ -3, water'
+    'Isoamyl Acetate @ -3, water': 'IaA @ -3, water',
+    'Banana filtrate': 'Ban @ 0',
+    'Banana filtrate @ -1, water': 'Ban @ -1, water',
+    'Pear filtrate': 'Pear @ 0',
+    'Pear filtrate @ -1, water': 'Pear @ -1, water',
+    'PearB filtrate': 'PearB @ 0',
+    'PearB filtrate @ -1, water': 'PearB @ -1, water',
+    'Basil filtrate': 'Basil @ 0',
+    'Basil filtrate @ -1, water': 'Basil @ -1'
 }
 
 # P-value significance threshold
 p_sig = 0.05
+
+# Palette for plot
+palette = {'odor': 'tab:orange',
+           'solvent': 'tab:blue'}
 
 def convert_google_sheet_url(url):
     # Regular expression to match and capture the necessary part of the URL
@@ -138,6 +150,7 @@ ax = sns.barplot(
     x='Odor',
     y='Trap %',
     hue='Trap',
+    palette=palette,
     capsize=0.1,
     errwidth=1.5,
     alpha=0.4)
@@ -147,12 +160,13 @@ sns.stripplot(
     x='Odor',
     y='Trap %',
     hue='Trap',
+    palette=palette,
     dodge=True,
     alpha=0.9,
     ax=ax
 )
 
-ax.set_xticklabels(xtick_labels, size=12, rotation=15)
+ax.set_xticklabels(xtick_labels, size=12, rotation=45)
 ax.set_ylabel('% Flies trapped\n(Mean + 95% CI)', size=16)
 ax.set_xlabel('')
 ax.set_yticklabels(ax.get_yticklabels(), size=15)
@@ -161,7 +175,7 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[0:2], labels[0:2])
 plt.tight_layout()
 fig = plt.gcf()
-fig.set_size_inches(10, 4)
+fig.set_size_inches(12, 4)
 
 
 # Statistical tests
