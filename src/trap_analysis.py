@@ -20,8 +20,9 @@ savedir = 'figures'
 # Odor order
 odor_order = [
     '2-butanone @ -2, water',
-    #'2-butanone @ -2, pfo',
+    '2-butanone @ -2, pfo',
     #'Isoamyl Acetate @ -3, water',
+    'Isoamyl Acetate @ -3, pfo',
     'Banana filtrate',
     'Banana filtrate @ -1, water',
     'Pear filtrate',
@@ -37,6 +38,7 @@ odor_abb = {
     '2-butanone @ -2, water': '2-but @ -2, water',
     '2-butanone @ -2, pfo': '2-but @ -2, pfo',
     'Isoamyl Acetate @ -3, water': 'IaA @ -3, water',
+    'Isoamyl Acetate @ -3, pfo': 'IaA @ -3, pfo',
     'Banana filtrate': 'Ban @ 0',
     'Banana filtrate @ -1, water': 'Ban @ -1, water',
     'Pear filtrate': 'Pear @ 0',
